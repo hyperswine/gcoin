@@ -1,0 +1,2 @@
+# gcoin
+A great coin
