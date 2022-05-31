@@ -1,0 +1,8 @@
+[package]
+name = "gcoin"
+version = "0.1.0"
+edition = "2021"
+description = "A great coin"
+license-file = "LICENSE"
+
+[dependencies]
