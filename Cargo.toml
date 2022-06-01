@@ -4,8 +4,11 @@ version = "0.1.0"
 edition = "2021"
 description = "A great coin"
 license-file = "LICENSE"
+authors = ["Jason Qin"]
 
 [dependencies]
 openssl = "0.10.40"
 pem = "1.0.2"
 log = "*"
+ripemd = "0.1.1"
+hex-literal = "0.3.4"
