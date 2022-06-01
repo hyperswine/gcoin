@@ -6,3 +6,6 @@ description = "A great coin"
 license-file = "LICENSE"
 
 [dependencies]
+openssl = "0.10.40"
+pem = "1.0.2"
+log = "*"
