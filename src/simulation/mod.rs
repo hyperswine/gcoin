@@ -11,6 +11,18 @@
 
 // all keys must be unique
 
+/*
+SMP
+
+a thread is spawned for each request
+1. sleep 1 to simulate the propagation time
+2. once arrived at its destination, sleep 1 to simulate processing of the data
+3. if paying someone, dont bother waiting on the sender node. Just keep track of a certain storage node. The sender node should have sent the packet to storage nodes and wallet nodes
+4. if trying to discover other nodes esp wallet and storage nodes, wait 10 sec max for a reply from the server node.  The print it out
+5. if trying to get the latest blockchain, similar to 4 except we wait 15 sec max. Print out new blockchain
+
+*/
+
 use crate::{
     core::{Blockchain, Pay, Wallet},
     network::Node,
@@ -41,7 +53,6 @@ impl VWallet {
 
 impl Pay for VWallet {
     fn pay(&mut self, amount: u64, payee: crate::core::GCoinAddress) -> bool {
-        
         if amount == 0 {
             return false;
         }
