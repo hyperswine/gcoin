@@ -23,6 +23,8 @@ a thread is spawned for each request
 
 */
 
+use std::future::Future;
+
 use crate::{
     core::{Blockchain, Pay, Wallet},
     network::Node,
@@ -31,6 +33,13 @@ use crate::{
 type VNode = Node<VRouter, VWallet, VStorage>;
 type VKey = u64;
 
+// Ping and get something back later
+pub trait Pingable {
+    fn ping<F>(data: &[u8]) -> F::Output
+    where
+        F: Future;
+}
+
 // Assume that everyone has out of date info and must constantly listen and update their info
 // When a new node connects, it should request for the latest data and tell everyone the latest block that it has. If it matches the main blockchain, it will send the rest of the blocks. Else it will send Error "blockchain not canon" and the sender can request for the entire blockchain instead
 
@@ -38,18 +47,27 @@ type VKey = u64;
 pub struct VRouter {
     key: VKey,
     other_nodes: Vec<VKey>,
+    connected_nodes: Vec<VNode>,
 }
 
 pub struct VWallet {
     key: VKey,
     wallet: Wallet,
+    connected_nodes: Vec<VNode>,
 }
 
 impl VWallet {
-    pub fn new(key: VKey, wallet: Wallet) -> Self {
-        Self { key, wallet }
+    pub fn new(key: VKey, wallet: Wallet, connected_nodes: Vec<VNode>) -> Self {
+        Self {
+            key,
+            wallet,
+            connected_nodes,
+        }
     }
 }
+
+pub const WAIT_RESPONSE_TIMEOUT_SEC: usize = 5;
+pub const MINIMUM_CONFIRMATION_RATIO: f32 = 0.51;
 
 impl Pay for VWallet {
     fn pay(&mut self, amount: u64, payee: crate::core::GCoinAddress) -> bool {
@@ -58,6 +76,12 @@ impl Pay for VWallet {
         }
 
         // ping network node about payee's address
+        self.connected_nodes.iter().for_each(|node| {
+            // ping the node and wait for it to return on another thread
+            // if it satisfies the future and provides an OK, address exists, take that as confirmation
+            // ? maybe make a threshold of X confirmations at least out of the ones that responded in Y seconds
+        });
+
         // if true, then confident that payee indeed exists
 
         true
@@ -69,6 +93,7 @@ impl Pay for VWallet {
 pub struct VStorage {
     key: VKey,
     main_blockchain: Blockchain,
+    connected_nodes: Vec<VNode>,
 }
 
 /// We start with an entry node which holds the keys of other nodes
@@ -81,3 +106,8 @@ pub struct EntryNode {}
 pub struct VNetwork {
     nodes: Vec<VNode>,
 }
+
+// TESTS
+
+#[test]
+fn test_async() {}
