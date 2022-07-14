@@ -2,12 +2,12 @@
 // GCOIN NETWORK API
 // ---------------
 
+use crate::core::{Blockchain, Wallet};
 use std::{
     io::{Read, Write},
     net::{Ipv6Addr, TcpStream},
 };
-
-use crate::core::{Blockchain, Wallet};
+use tokio::net::UdpSocket;
 
 pub const GCOIN_PORT: u64 = 6900;
 

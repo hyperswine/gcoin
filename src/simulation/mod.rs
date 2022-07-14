@@ -88,26 +88,24 @@ impl Pay for VWallet {
     }
 }
 
-/// Stores a copy of the entire blockchain
-/// And other 'potential blockchains' in its lower list
+/// Stores a copy of the entire blockchain. And other 'potential blockchains' in its lower list
 pub struct VStorage {
     key: VKey,
     main_blockchain: Blockchain,
     connected_nodes: Vec<VNode>,
 }
 
-/// We start with an entry node which holds the keys of other nodes
-/// It then calls vnet.connect() to attempt a connection
+/// We start with an entry node which holds the keys of other nodes. It then calls vnet.connect() to attempt a connection
 pub struct EntryNode {}
 
-/// Entire view of the network instead of just one node's view
-/// Contains a list of every node but doesnt know their relationship
-/// If a node wants to connect, it will search if that node exists
+/// Entire view of the network instead of just one node's view. Contains a list of every node but doesnt know their relationship. If a node wants to connect, it will search if that node exists
 pub struct VNetwork {
     nodes: Vec<VNode>,
 }
 
+// ----------------
 // TESTS
+// ----------------
 
 #[test]
 fn test_async() {}
